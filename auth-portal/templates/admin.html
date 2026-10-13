@@ -395,6 +395,21 @@
                                         </div>
                                     </div>
                                 </form>
+                                <form id="oidc-media-form" class="oauth-form">
+                                    <h3>Media-server authorization</h3>
+                                    <p>Select applications that require current access to the configured media server. This check applies even when the application requests only standard OIDC scopes. Login and MFA remain required.</p>
+                                    <div id="oidc-media-clients"></div>
+                                    <details><summary>Compatibility scope aliases</summary>
+                                        <label for="oidc-media-aliases">Existing dynamic media scopes (comma-separated)</label>
+                                        <input id="oidc-media-aliases">
+                                        <p>Keep existing aliases while connected applications use them. The application selection above controls OIDC media admission; aliases preserve existing scope names.</p>
+                                    </details>
+                                    <label for="oidc-media-reason">Change reason</label>
+                                    <input id="oidc-media-reason" maxlength="200" required>
+                                    <button type="submit" class="primary-btn" disabled>Save media authorization</button>
+                                    <button type="button" id="oidc-media-reload" class="ghost-btn">Reload</button>
+                                    <p id="oidc-media-status" role="status"></p>
+                                </form>
                             </section>
                         </div>
                     </div>
@@ -1170,5 +1185,6 @@
     </dialog>
 
     <script type="module" src="/static/admin.js"></script>
+    <script type="module" src="/static/admin/oidc-media-config.js"></script>
 </body>
 </html>

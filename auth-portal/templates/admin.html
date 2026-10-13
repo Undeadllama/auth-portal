@@ -692,11 +692,16 @@
                     <p class="panel-helper">Manage manual RBAC role bindings. LDAP-driven role assignments are configured in the LDAP Sync tab and appear here as effective roles.</p>
                     <section class="panel-section">
                       <h3>OIDC role assignment</h3>
-                      <p class="panel-helper">Export selected Access Control roles to an OIDC client. Changes apply at the next SSO login; manual bindings are preserved.</p>
+                      <p class="panel-helper">Export selected Access Control roles to an OIDC client. Optionally assign a role from current Plex sharing. Changes apply at the next SSO login; manual bindings are preserved.</p>
                       <form id="oidc-role-config-form" class="oauth-form">
                         <div class="form-row"><label for="oidc-role-client">Application</label><select id="oidc-role-client" required></select></div>
                         <div class="form-row"><label for="oidc-role-exports">Roles to export (comma-separated)</label><input id="oidc-role-exports" required></div>
                         <div class="form-row"><label><input id="oidc-role-permissions" type="checkbox"> Export permissions from these roles</label></div>
+                        <div class="form-row"><label><input id="oidc-role-plex" type="checkbox"> Assign roles from Plex sharing</label></div>
+                        <div class="form-row"><label for="oidc-role-owner">Plex owner identity</label><input id="oidc-role-owner" placeholder="plex-user ID"></div>
+                        <div class="form-row"><label for="oidc-role-section">Plex library section key</label><input id="oidc-role-section"></div>
+                        <div class="form-row"><label for="oidc-role-match">Role when library is shared</label><select id="oidc-role-match"></select></div>
+                        <div class="form-row"><label for="oidc-role-default">Role for other authorized Plex users</label><select id="oidc-role-default"></select></div>
                         <div class="form-row"><label for="oidc-role-reason">Change reason</label><input id="oidc-role-reason" required></div>
                         <button type="submit" class="primary-btn">Save role assignment</button>
                         <button type="button" id="oidc-role-reload" class="ghost-btn">Reload</button>

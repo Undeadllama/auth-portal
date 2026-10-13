@@ -1,5 +1,9 @@
 # AuthPortal (v2.0.6)
 
+> **Fork preparation branch:** configurable OIDC enhancements are documented in
+> [docs/OIDC-ENHANCEMENTS.md](docs/OIDC-ENHANCEMENTS.md). This branch is not an
+> upstream release; no upstream pull request has been submitted.
+
 [![Docker Pulls](https://img.shields.io/docker/pulls/modomofn/auth-portal.svg)](https://hub.docker.com/r/modomofn/auth-portal)
 [![Docker Image Size](https://img.shields.io/docker/image-size/modomofn/auth-portal/latest)](https://hub.docker.com/r/modomofn/auth-portal)
 [![Go Version](https://img.shields.io/badge/Go-1.26.8%2B-00ADD8?logo=go)](https://go.dev/)

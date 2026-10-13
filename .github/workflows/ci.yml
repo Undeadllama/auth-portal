@@ -23,6 +23,21 @@ jobs:
       # Public, deterministic test-only key; never use this value in deployment.
       DATA_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
       SESSION_SECRET: auth-portal-ci-session-secret-not-for-production
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          # Public disposable CI fixture credentials; never use in deployment.
+          POSTGRES_USER: authportal_test
+          POSTGRES_PASSWORD: authportal_ci_fixture_only
+          POSTGRES_DB: authportal_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U authportal_test -d authportal_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     defaults:
       run:
         working-directory: auth-portal
@@ -73,8 +88,10 @@ jobs:
       - name: Vet
         run: go vet ./...
 
-      - name: Test
-        run: go test ./...
+      - name: Test with race detector and isolated PostgreSQL
+        env:
+          AUTHPORTAL_TEST_DATABASE_URL: postgres://authportal_test:authportal_ci_fixture_only@localhost:5432/authportal_test?sslmode=disable
+        run: go test -race ./...
 
   admin-smoke:
     name: Admin smoke tests
@@ -91,8 +108,11 @@ jobs:
         with:
           node-version: 24
 
-      - name: Run admin smoke tests
-        run: node auth-portal/static/admin/smoke-test.mjs
+      - name: Run admin and OIDC browser regression tests
+        run: |
+          node auth-portal/static/admin/smoke-test.mjs
+          node auth-portal/tests/login_flow_test.cjs auth-portal/static/login.js
+          node --experimental-vm-modules auth-portal/tests/oidc_config_ui_test.cjs auth-portal
 
   secret-scan:
     name: Secret scan

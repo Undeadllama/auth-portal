@@ -390,6 +390,10 @@ func shouldRequireConsent(ctx context.Context, user User, client oauth.Client, s
 	if promptConsent {
 		return true
 	}
+	if isTrustedOIDCClient(client) {
+		return false
+	}
+
 	hasConsent, err := oauthService.HasConsent(ctx, int64(user.ID), client.ClientID, scopes)
 	if err != nil {
 		log.Printf("oidc authorize: consent check failed for %s/%s: %v", user.Username, client.ClientID, err)

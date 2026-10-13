@@ -395,6 +395,16 @@
                                         </div>
                                     </div>
                                 </form>
+                                <form id="oidc-consent-form" class="oauth-form">
+                                    <h3>Trusted applications</h3>
+                                    <p>Skip the first-use consent screen for selected applications. Login, MFA and access checks still apply. Explicit consent requests are honored. Changing a client's scopes or redirect URLs requires saving trust again.</p>
+                                    <div id="oidc-consent-clients"></div>
+                                    <label for="oidc-consent-reason">Change reason</label>
+                                    <input id="oidc-consent-reason" required maxlength="200" placeholder="Why are these applications trusted?">
+                                    <button type="submit" class="primary-btn">Save trusted applications</button>
+                                    <button type="button" id="oidc-consent-reload" class="ghost-btn">Reload</button>
+                                    <p id="oidc-consent-status" role="status"></p>
+                                </form>
                             </section>
                         </div>
                     </div>
@@ -1170,5 +1180,6 @@
     </dialog>
 
     <script type="module" src="/static/admin.js"></script>
+    <script type="module" src="/static/admin/oidc-consent-config.js"></script>
 </body>
 </html>

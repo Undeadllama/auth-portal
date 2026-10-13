@@ -222,6 +222,10 @@ func oidcAuthorizeHandler(w http.ResponseWriter, r *http.Request) {
 
 	client, redirectURI, scopes, err := prepareAuthorizeClient(r.Context(), reqCtx)
 	if err != nil {
+		if errors.Is(err, errOIDCMediaDenied) && redirectURI != "" {
+			writeOIDCRedirectError(w, r, redirectURI, reqCtx.State, oidcErrCodeAccessDenied, err.Error())
+			return
+		}
 		writeOIDCError(w, http.StatusBadRequest, oidcErrCodeInvalidRequest, err.Error())
 		return
 	}
@@ -364,9 +368,12 @@ func prepareAuthorizeClient(ctx context.Context, req authorizeRequest) (oauth.Cl
 	if err != nil {
 		return oauth.Client{}, "", nil, err
 	}
+	if err := enforceOIDCMediaPolicyContext(ctx, client.ClientID); err != nil {
+		return client, redirectURI, nil, err
+	}
 	scopes, err = enforceUserScopeEntitlements(ctx, scopes)
 	if err != nil {
-		return oauth.Client{}, "", nil, err
+		return client, redirectURI, nil, err
 	}
 	return client, redirectURI, scopes, nil
 }
@@ -390,6 +397,10 @@ func shouldRequireConsent(ctx context.Context, user User, client oauth.Client, s
 	if promptConsent {
 		return true
 	}
+	if isTrustedOIDCClient(client) {
+		return false
+	}
+
 	hasConsent, err := oauthService.HasConsent(ctx, int64(user.ID), client.ClientID, scopes)
 	if err != nil {
 		log.Printf("oidc authorize: consent check failed for %s/%s: %v", user.Username, client.ClientID, err)
@@ -456,6 +467,10 @@ func oidcAuthorizeDecisionHandler(w http.ResponseWriter, r *http.Request) {
 	scopes, err = enforceClientScopePolicy(scopes, client)
 	if err != nil {
 		writeOIDCRedirectError(w, r, redirectURI, state, "invalid_scope", err.Error())
+		return
+	}
+	if err := enforceOIDCMediaPolicyContext(r.Context(), client.ClientID); err != nil {
+		writeOIDCRedirectError(w, r, redirectURI, state, oidcErrCodeAccessDenied, err.Error())
 		return
 	}
 	scopes, err = enforceUserScopeEntitlements(r.Context(), scopes)
@@ -597,7 +612,10 @@ func issueAuthCodeGrantTokens(
 	if err != nil {
 		return oauth.AccessToken{}, "", time.Time{}, "", errAuthorizationCodeUserNotFound
 	}
-	if _, err := enforceUserScopeEntitlementsForIdentity(strings.TrimSpace(user.MediaUUID.String), strings.TrimSpace(user.Username), authCode.Scopes); err != nil {
+	if err := enforceOIDCMediaPolicy(client.ClientID, user.MediaUUID.String, user.Username); err != nil {
+		return oauth.AccessToken{}, "", time.Time{}, "", err
+	}
+	if _, err := enforceOIDCUserScopeEntitlementsForIdentity(strings.TrimSpace(user.MediaUUID.String), strings.TrimSpace(user.Username), authCode.Scopes); err != nil {
 		return oauth.AccessToken{}, "", time.Time{}, "", err
 	}
 
@@ -668,6 +686,10 @@ func handleAuthorizationCodeGrant(w http.ResponseWriter, r *http.Request, client
 
 	access, refresh, refreshExpiry, idToken, err := issueAuthCodeGrantTokens(r.Context(), client, authCode)
 	if err != nil {
+		if errors.Is(err, errOIDCMediaDenied) {
+			writeOIDCError(w, http.StatusBadRequest, oidcErrCodeInvalidGrant, err.Error())
+			return
+		}
 		if errors.Is(err, errAuthorizationCodeUserNotFound) {
 			writeOIDCError(w, http.StatusBadRequest, oidcErrCodeInvalidGrant, errUserNotFound)
 			return
@@ -706,7 +728,11 @@ func handleRefreshTokenGrant(w http.ResponseWriter, r *http.Request, client oaut
 		writeOIDCError(w, http.StatusBadRequest, oidcErrCodeInvalidGrant, errUserNotFound)
 		return
 	}
-	updatedScopes, err := enforceUserScopeEntitlementsForIdentity(strings.TrimSpace(user.MediaUUID.String), strings.TrimSpace(user.Username), access.Scopes)
+	if err := enforceOIDCMediaPolicy(client.ClientID, user.MediaUUID.String, user.Username); err != nil {
+		writeOIDCError(w, http.StatusBadRequest, oidcErrCodeInvalidGrant, err.Error())
+		return
+	}
+	updatedScopes, err := enforceOIDCUserScopeEntitlementsForIdentity(strings.TrimSpace(user.MediaUUID.String), strings.TrimSpace(user.Username), access.Scopes)
 	if err != nil {
 		writeOIDCError(w, http.StatusBadRequest, oidcErrCodeInvalidGrant, err.Error())
 		return
@@ -770,11 +796,27 @@ func oidcUserinfoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := enforceOIDCMediaPolicy(access.ClientID, user.MediaUUID.String, user.Username); err != nil {
+		http.Error(w, "media access denied", http.StatusForbidden)
+		return
+	}
+	if _, err := enforceOIDCUserScopeEntitlementsForIdentity(user.MediaUUID.String, user.Username, access.Scopes); err != nil {
+		http.Error(w, "scope access denied", http.StatusForbidden)
+		return
+	}
+	roleClaims, roleErr := configuredOIDCRoleClaims(access.ClientID, user)
+	if roleErr != nil {
+		http.Error(w, "role verification failed", http.StatusForbidden)
+		return
+	}
 	payload := map[string]any{
 		"sub":                subjectForUser(user),
 		"preferred_username": strings.TrimSpace(user.Username),
 		"name":               strings.TrimSpace(user.Username),
 		"email_verified":     user.Email.Valid && strings.TrimSpace(user.Email.String) != "",
+	}
+	for name, value := range roleClaims {
+		payload[name] = value
 	}
 	if user.Email.Valid && strings.TrimSpace(user.Email.String) != "" {
 		payload["email"] = strings.TrimSpace(user.Email.String)
@@ -1098,6 +1140,15 @@ func containsScope(scopes []string, target string) bool {
 }
 
 func enforceClientScopePolicy(requested []string, client oauth.Client) ([]string, error) {
+	cfg, _, err := oidcMediaConfig()
+	if err != nil {
+		return nil, errors.New("media authorization configuration unavailable")
+	}
+	for _, required := range cfg.ScopeAliases {
+		if containsScope(client.Scopes, required) && !containsScope(requested, required) {
+			requested = append(append([]string(nil), requested...), required)
+		}
+	}
 	allowed := allowedScopesForClient(client)
 	unique := make([]string, 0, len(requested))
 	seen := make(map[string]struct{}, len(requested))
@@ -1177,10 +1228,22 @@ func enforceUserScopeEntitlements(ctx context.Context, scopes []string) ([]strin
 	if username == "" && uuid == "" {
 		return nil, errors.New("session required")
 	}
-	return enforceUserScopeEntitlementsForIdentity(uuid, username, scopes)
+	return enforceOIDCUserScopeEntitlementsForIdentity(uuid, username, scopes)
 }
 
+// Scope-only callers retain explicit media authorization for compatibility.
+// OIDC callers separately enforce the administrator's per-client admission policy.
 func enforceUserScopeEntitlementsForIdentity(uuid, username string, scopes []string) ([]string, error) {
+	return enforceScopeEntitlements(uuid, username, scopes, true)
+}
+func enforceOIDCUserScopeEntitlementsForIdentity(uuid, username string, scopes []string) ([]string, error) {
+	return enforceScopeEntitlements(uuid, username, scopes, false)
+}
+func enforceScopeEntitlements(uuid, username string, scopes []string, authorizeMediaAliases bool) ([]string, error) {
+	media, _, err := oidcMediaConfig()
+	if err != nil {
+		return nil, errors.New("media authorization configuration unavailable")
+	}
 	grantedPermissions, err := userPermissions(uuid, username)
 	if err != nil {
 		return nil, fmt.Errorf("permission lookup failed")
@@ -1194,6 +1257,15 @@ func enforceUserScopeEntitlementsForIdentity(uuid, username string, scopes []str
 	for _, scope := range scopes {
 		scope = strings.TrimSpace(scope)
 		if scope == "" {
+			continue
+		}
+		if containsScope(media.ScopeAliases, scope) {
+			if authorizeMediaAliases {
+				if err := requireMediaAuthorization(uuid, username); err != nil {
+					return nil, err
+				}
+			}
+			out = append(out, scope)
 			continue
 		}
 		if isStandardOIDCScope(scope) {
@@ -1261,6 +1333,14 @@ func mintIDToken(audience string, user User, expires time.Time, nonce string) (s
 		email := strings.TrimSpace(user.Email.String)
 		claims["email"] = email
 		claims["email_verified"] = true
+	}
+
+	roleClaims, roleErr := configuredOIDCRoleClaims(audience, user)
+	if roleErr != nil {
+		return "", roleErr
+	}
+	for name, value := range roleClaims {
+		claims[name] = value
 	}
 
 	if n := strings.TrimSpace(nonce); n != "" {

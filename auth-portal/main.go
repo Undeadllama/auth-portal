@@ -397,6 +397,7 @@ func registerEnrollmentRoutes(r *mux.Router, lim routeLimiters) {
 }
 
 func registerOIDCRoutes(r *mux.Router) {
+	r.Handle("/oidc/login/cancel", requireSameOrigin(http.HandlerFunc(oidcLoginCancelHandler))).Methods("POST")
 	r.HandleFunc("/.well-known/openid-configuration", oidcDiscoveryHandler).Methods("GET", "OPTIONS")
 	r.HandleFunc("/oidc/jwks.json", oidcJWKSHandler).Methods("GET")
 	r.Handle(oidcAuthorizePath, authMiddleware(http.HandlerFunc(oidcAuthorizeHandler))).Methods("GET")
@@ -551,6 +552,10 @@ func registerAdminRoutes(r *mux.Router) {
 	adminAPI.Handle("/config/permissions", adminProtected(permissionConfigRead, http.HandlerFunc(adminConfigPermissionCatalogHandler))).Methods("GET")
 	adminAPI.Handle("/config/{section}", adminProtected(permissionConfigWrite, http.HandlerFunc(adminConfigUpdateHandler))).Methods("PUT")
 	adminAPI.Handle("/config/history/{section}", adminProtected(permissionConfigRead, http.HandlerFunc(adminConfigHistoryHandler))).Methods("GET")
+	adminAPI.Handle("/oauth/media-authorization", adminProtected(permissionOAuthRead, http.HandlerFunc(adminOIDCMediaConfigHandler))).Methods("GET")
+	adminAPI.Handle("/oauth/media-authorization", adminProtected(permissionOAuthWrite, requireSameOrigin(http.HandlerFunc(adminOIDCMediaConfigHandler)))).Methods("PUT")
+	adminAPI.Handle("/oauth/consent", adminProtected(permissionOAuthRead, http.HandlerFunc(adminOIDCConsentConfigHandler))).Methods("GET")
+	adminAPI.Handle("/oauth/consent", adminProtected(permissionOAuthWrite, requireSameOrigin(http.HandlerFunc(adminOIDCConsentConfigHandler)))).Methods("PUT")
 	adminAPI.Handle("/oauth/clients", adminProtected(permissionOAuthRead, http.HandlerFunc(adminOAuthClientsList))).Methods("GET")
 	adminAPI.Handle("/oauth/history", adminProtected(permissionOAuthRead, http.HandlerFunc(adminOAuthHistoryHandler))).Methods("GET")
 	adminAPI.Handle("/logs/history", adminProtected(permissionAdminAccess, http.HandlerFunc(adminLogsHistoryHandler))).Methods("GET")
@@ -569,6 +574,8 @@ func registerAdminRoutes(r *mux.Router) {
 	adminAPI.Handle("/ldap-sync", adminProtected(permissionLDAPRead, http.HandlerFunc(adminLDAPSyncGetHandler))).Methods("GET")
 	adminAPI.Handle("/ldap-sync/test-connection", adminProtected(permissionLDAPWrite, http.HandlerFunc(adminLDAPSyncTestConnectionHandler))).Methods("POST")
 	adminAPI.Handle("/ldap-sync/run", adminProtected(permissionLDAPWrite, http.HandlerFunc(adminLDAPSyncRunHandler))).Methods("POST")
+	adminAPI.Handle("/rbac/oidc-role-assignment", adminProtected(permissionRBACRead, http.HandlerFunc(adminOIDCRoleConfigHandler))).Methods("GET")
+	adminAPI.Handle("/rbac/oidc-role-assignment", adminProtected(permissionRBACWrite, requireSameOrigin(http.HandlerFunc(adminOIDCRoleConfigHandler)))).Methods("PUT")
 	adminAPI.Handle("/rbac", adminProtected(permissionRBACRead, http.HandlerFunc(adminRBACGetHandler))).Methods("GET")
 	adminAPI.Handle("/rbac/bindings", adminProtected(permissionRBACWrite, http.HandlerFunc(adminRBACBindingUpsertHandler))).Methods("PUT")
 	adminAPI.Handle("/rbac/roles", adminProtected(permissionRBACWrite, http.HandlerFunc(adminRBACRoleCreateHandler))).Methods("POST")

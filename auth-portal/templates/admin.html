@@ -395,6 +395,32 @@
                                         </div>
                                     </div>
                                 </form>
+                                <form id="oidc-media-form" class="oauth-form">
+                                    <h3>Media-server authorization</h3>
+                                    <p>Select applications that require current access to the configured media server. This check applies even when the application requests only standard OIDC scopes. Login and MFA remain required.</p>
+                                    <div id="oidc-media-clients"></div>
+                                    <details><summary>Compatibility scope aliases</summary>
+                                        <label for="oidc-media-aliases">Existing dynamic media scopes (comma-separated)</label>
+                                        <input id="oidc-media-aliases">
+                                        <p>Keep existing aliases while connected applications use them. The application selection above controls OIDC media admission; aliases preserve existing scope names.</p>
+                                    </details>
+                                    <label for="oidc-media-reason">Change reason</label>
+                                    <input id="oidc-media-reason" maxlength="200" required>
+                                    <button type="submit" class="primary-btn" disabled>Save media authorization</button>
+                                    <button type="button" id="oidc-media-reload" class="ghost-btn">Reload</button>
+                                    <p id="oidc-media-status" role="status"></p>
+                                </form>
+                                <form id="oidc-consent-form" class="oauth-form">
+                                    <h3>Trusted applications</h3>
+                                    <p>Skip the first-use consent screen for selected applications. Login, MFA and access checks still apply. Explicit consent requests are honored. Changing a client's scopes or redirect URLs requires saving trust again.</p>
+                                    <div id="oidc-consent-clients"></div>
+                                    <label for="oidc-consent-reason">Change reason</label>
+                                    <input id="oidc-consent-reason" required maxlength="200" placeholder="Why are these applications trusted?">
+                                    <button type="submit" class="primary-btn">Save trusted applications</button>
+                                    <button type="button" id="oidc-consent-reload" class="ghost-btn">Reload</button>
+                                    <p id="oidc-consent-status" role="status"></p>
+                                </form>
+
                             </section>
                         </div>
                     </div>
@@ -690,6 +716,24 @@
                         </div>
                     </div>
                     <p class="panel-helper">Manage manual RBAC role bindings. LDAP-driven role assignments are configured in the LDAP Sync tab and appear here as effective roles.</p>
+                    <section class="panel-section">
+                      <h3>OIDC role assignment</h3>
+                      <p class="panel-helper">Export selected Access Control roles to an OIDC client. Optionally assign a role from current Plex sharing. Changes apply at the next SSO login; manual bindings are preserved.</p>
+                      <form id="oidc-role-config-form" class="oauth-form">
+                        <div class="form-row"><label for="oidc-role-client">Application</label><select id="oidc-role-client" required></select></div>
+                        <div class="form-row"><label for="oidc-role-exports">Roles to export (comma-separated)</label><input id="oidc-role-exports" required></div>
+                        <div class="form-row"><label><input id="oidc-role-permissions" type="checkbox"> Export permissions from these roles</label></div>
+                        <div class="form-row"><label><input id="oidc-role-plex" type="checkbox"> Assign roles from Plex sharing</label></div>
+                        <div class="form-row"><label for="oidc-role-owner">Plex owner identity</label><input id="oidc-role-owner" placeholder="plex-user ID"></div>
+                        <div class="form-row"><label for="oidc-role-section">Plex library section key</label><input id="oidc-role-section"></div>
+                        <div class="form-row"><label for="oidc-role-match">Role when library is shared</label><select id="oidc-role-match"></select></div>
+                        <div class="form-row"><label for="oidc-role-default">Role for other authorized Plex users</label><select id="oidc-role-default"></select></div>
+                        <div class="form-row"><label for="oidc-role-reason">Change reason</label><input id="oidc-role-reason" required></div>
+                        <button type="submit" class="primary-btn">Save role assignment</button>
+                        <button type="button" id="oidc-role-reload" class="ghost-btn">Reload</button>
+                        <p id="oidc-role-status" role="status"></p>
+                      </form>
+                    </section>
                     <div class="panel-layout">
                         <section class="panel-section">
                             <div class="panel-section-head">
@@ -1170,5 +1214,8 @@
     </dialog>
 
     <script type="module" src="/static/admin.js"></script>
+    <script type="module" src="/static/admin/oidc-role-config.js"></script>
+    <script type="module" src="/static/admin/oidc-consent-config.js"></script>
+    <script type="module" src="/static/admin/oidc-media-config.js"></script>
 </body>
 </html>

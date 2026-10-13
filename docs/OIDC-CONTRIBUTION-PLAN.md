@@ -77,10 +77,12 @@ production. The fork CI supplies a disposable PostgreSQL service, exercises the
 full race suite and runs both new Node regression scripts. Existing container-build
 CI remains build-only. No release or registry workflow is part of validation.
 
-## Proposed PR sequence
+## Prepared PR sequence
 
 Do not submit this combined preparation branch wholesale without discussing scope.
-The following is a proposal, not an agreed maintainer requirement:
+The branches and draft descriptions are now prepared in
+[docs/submissions](submissions/README.md). Target `main` is confirmed; maintainer
+discussion is treated as complete per the operator. The sequence is:
 
 1. **Login continuation/cancellation.** Independent change with Go callback-validation
    and Node popup/provider tests. Explain blocked-popup retry, MFA continuation and
@@ -109,12 +111,12 @@ in the fork rather than being included in every PR.
 
 - Refresh upstream and check related issues/PRs again. At preparation time, open
   upstream PRs were dependency/action updates, not competing OIDC implementations.
-- Confirm the preferred base (`main` versus `next`) and whether the maintainer wants
-  these features, smaller PRs or an initial design discussion. The current README
-  welcomes issues/PRs but does not prescribe CLA/DCO or a specific PR template;
-  do not infer additional requirements without checking again.
-- Perform the independent split above and review each full diff, API surface,
-  UI wording, defaults and permissions. Keep unrelated formatting/dependencies out.
+- Target upstream `main`; scope discussion with the maintainer is treated as complete.
+  The README welcomes issues/PRs but does not prescribe CLA/DCO or a PR template.
+  Check for newly added requirements immediately before submission.
+- Use the prepared independent branches, reviewed diffs and feature-specific guides.
+  After prerequisites merge, rebase onto `main` and recheck the resulting API/UI,
+  permissions and defaults. Keep unrelated formatting/dependencies out.
 - Verify clean CI on each final commit: module consistency, formatting, vet,
   race/PostgreSQL tests, Node regressions, secret scan and upstream container build.
   Review any fork-only infrastructure failures separately from application failures.

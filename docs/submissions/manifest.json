@@ -1,0 +1,98 @@
+{
+  "prepared_at": "2026-10-13T14:55:09.046194+01:00",
+  "upstream_base": "62fea17bdda4085e6ee8b8588ed8f42af8e8463f",
+  "branches": [
+    {
+      "name": "submission/01-login-cancellation",
+      "commit": "7b53c352e9ce190b35b24fb1cbb9219e619a3330",
+      "parent": "main",
+      "target": "modom-ofn/auth-portal:main",
+      "ci": {
+        "conclusion": "success",
+        "databaseId": 38408300234,
+        "headBranch": "submission/01-login-cancellation",
+        "headSha": "7b53c352e9ce190b35b24fb1cbb9219e619a3330",
+        "status": "completed",
+        "url": "https://github.com/Undeadllama/auth-portal/actions/runs/38408300234"
+      },
+      "draft": "01-login-cancellation.md"
+    },
+    {
+      "name": "submission/02-config-foundation",
+      "commit": "f8f1e8bd1aff8177b0b4d5475b073b22f718306e",
+      "parent": "main",
+      "target": "modom-ofn/auth-portal:main",
+      "ci": {
+        "conclusion": "success",
+        "databaseId": 38408306223,
+        "headBranch": "submission/02-config-foundation",
+        "headSha": "f8f1e8bd1aff8177b0b4d5475b073b22f718306e",
+        "status": "completed",
+        "url": "https://github.com/Undeadllama/auth-portal/actions/runs/38408306223"
+      },
+      "draft": "02-config-foundation.md"
+    },
+    {
+      "name": "submission/03-media-authorization",
+      "commit": "d7c2a381b55d9e4f55dc8468171059bb4cb36aab",
+      "parent": "submission/02-config-foundation",
+      "target": "modom-ofn/auth-portal:main",
+      "ci": {
+        "conclusion": "success",
+        "databaseId": 38408310519,
+        "headBranch": "submission/03-media-authorization",
+        "headSha": "d7c2a381b55d9e4f55dc8468171059bb4cb36aab",
+        "status": "completed",
+        "url": "https://github.com/Undeadllama/auth-portal/actions/runs/38408310519"
+      },
+      "draft": "03-media-authorization.md"
+    },
+    {
+      "name": "submission/04-role-claims",
+      "commit": "80cea4eff0a4e9a2dea0d06d2444e9a617c3cbcd",
+      "parent": "submission/02-config-foundation",
+      "target": "modom-ofn/auth-portal:main",
+      "ci": {
+        "conclusion": "success",
+        "databaseId": 38408316965,
+        "headBranch": "submission/04-role-claims",
+        "headSha": "80cea4eff0a4e9a2dea0d06d2444e9a617c3cbcd",
+        "status": "completed",
+        "url": "https://github.com/Undeadllama/auth-portal/actions/runs/38408316965"
+      },
+      "draft": "04-role-claims.md"
+    },
+    {
+      "name": "submission/05-plex-role-assignment",
+      "commit": "ebbb5f13727a0555efc1b1dc09f46107a133f067",
+      "parent": "submission/04-role-claims",
+      "target": "modom-ofn/auth-portal:main",
+      "ci": {
+        "conclusion": "success",
+        "databaseId": 38408322044,
+        "headBranch": "submission/05-plex-role-assignment",
+        "headSha": "ebbb5f13727a0555efc1b1dc09f46107a133f067",
+        "status": "completed",
+        "url": "https://github.com/Undeadllama/auth-portal/actions/runs/38408322044"
+      },
+      "draft": "05-plex-role-assignment.md"
+    },
+    {
+      "name": "submission/06-trusted-consent",
+      "commit": "f0d8676bc75807015884e8787f03fca5e450d806",
+      "parent": "submission/02-config-foundation",
+      "target": "modom-ofn/auth-portal:main",
+      "ci": {
+        "conclusion": "success",
+        "databaseId": 38408327375,
+        "headBranch": "submission/06-trusted-consent",
+        "headSha": "f0d8676bc75807015884e8787f03fca5e450d806",
+        "status": "completed",
+        "url": "https://github.com/Undeadllama/auth-portal/actions/runs/38408327375"
+      },
+      "draft": "06-trusted-consent.md"
+    }
+  ],
+  "pr_created": false,
+  "production_changed": false
+}

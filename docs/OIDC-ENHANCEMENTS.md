@@ -51,7 +51,7 @@ clients and custom roles through the ordinary admin interface.
 - Go tests alongside the implementation; Node regressions in `auth-portal/tests/`.
 
 The implementation is prepared as one integration branch to preserve the tested
-behavior. The contribution plan proposes smaller independently validated PRs
+behavior. The [prepared branch map and PR drafts](submissions/README.md) provide smaller independently validated PRs
 rather than asking a maintainer to accept the entire branch at once.
 
 Development used AI assistance. Automated tests, live deployment checks and

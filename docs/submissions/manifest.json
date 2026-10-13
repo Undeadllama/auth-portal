@@ -4,18 +4,25 @@
   "branches": [
     {
       "name": "submission/01-login-cancellation",
-      "commit": "7b53c352e9ce190b35b24fb1cbb9219e619a3330",
+      "commit": "627661355ef18f6c0fb6144fb277e6273deef06a",
       "parent": "main",
       "target": "modom-ofn/auth-portal:main",
       "ci": {
+        "headSha": "627661355ef18f6c0fb6144fb277e6273deef06a",
         "conclusion": "success",
-        "databaseId": 38408300234,
-        "headBranch": "submission/01-login-cancellation",
-        "headSha": "7b53c352e9ce190b35b24fb1cbb9219e619a3330",
         "status": "completed",
-        "url": "https://github.com/Undeadllama/auth-portal/actions/runs/38408300234"
+        "databaseId": 38418128673,
+        "url": "https://github.com/Undeadllama/auth-portal/actions/runs/38418128673"
       },
-      "draft": "01-login-cancellation.md"
+      "draft": "01-login-cancellation.md",
+      "pull_request": {
+        "url": "https://github.com/modom-ofn/auth-portal/pull/177",
+        "state": "OPEN",
+        "base": "main",
+        "ai_generation_disclosed": true,
+        "upstream_actions": "awaiting maintainer approval",
+        "sonar": "Requires review of intentional VM browser-test execution; all other reported findings resolved"
+      }
     },
     {
       "name": "submission/02-config-foundation",
@@ -30,7 +37,15 @@
         "status": "completed",
         "url": "https://github.com/Undeadllama/auth-portal/actions/runs/38408306223"
       },
-      "draft": "02-config-foundation.md"
+      "draft": "02-config-foundation.md",
+      "pull_request": {
+        "url": "https://github.com/modom-ofn/auth-portal/pull/178",
+        "state": "OPEN",
+        "base": "main",
+        "ai_generation_disclosed": true,
+        "upstream_actions": "awaiting maintainer approval",
+        "sonar": "Passed"
+      }
     },
     {
       "name": "submission/03-media-authorization",
@@ -93,6 +108,10 @@
       "draft": "06-trusted-consent.md"
     }
   ],
-  "pr_created": false,
-  "production_changed": false
+  "pr_created": true,
+  "production_changed": false,
+  "pull_requests": {
+    "01-login-cancellation": "https://github.com/modom-ofn/auth-portal/pull/177",
+    "02-config-foundation": "https://github.com/modom-ofn/auth-portal/pull/178"
+  }
 }

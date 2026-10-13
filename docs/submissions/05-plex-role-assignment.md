@@ -1,5 +1,7 @@
 # Assign owned OIDC roles from Plex library sharing
 
+> **AI-generated code:** All code added or modified for this change was fully generated using AI. It has been tested, but must be independently reviewed by a maintainer before merging.
+
 Target: `modom-ofn/auth-portal:main`. Prepared source: `submission/05-plex-role-assignment`.
 
 Open only after `submission/04-role-claims` and its prerequisites merge into upstream `main`; rebase and rerun checks first. The current branch includes those prerequisite commits.
@@ -12,4 +14,4 @@ Validation: Full suite/race/PostgreSQL, share/identity/system-permission validat
 
 Compatibility/limits: Depends on role claims and the configuration foundation. Network lookup is bounded and outside the transaction lock. Generated roles grant real global AuthPortal RBAC permissions; dedicated downstream roles are recommended. Existing ID tokens/downstream sessions cannot be recalled by removing a rule. No credential-export route is added.
 
-Development used AI assistance; code, automated results and deployment evidence were reviewed separately. GPL-3.0 licensing is retained.
+GPL-3.0 licensing is retained.

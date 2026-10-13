@@ -1,5 +1,7 @@
 # Configure mandatory media authorization per OIDC client
 
+> **AI-generated code:** All code added or modified for this change was fully generated using AI. It has been tested, but must be independently reviewed by a maintainer before merging.
+
 Target: `modom-ofn/auth-portal:main`. Prepared source: `submission/03-media-authorization`.
 
 Open only after `submission/02-config-foundation` and its prerequisites merge into upstream `main`; rebase and rerun checks first. The current branch includes those prerequisite commits.
@@ -12,4 +14,4 @@ Validation: Full suite/race/PostgreSQL, arbitrary-client/provider-failure and om
 
 Compatibility/limits: Empty selection preserves stock upstream admission. Deployments with existing custom mandatory guards must seed equivalent selections before replacing those guards. Fresh live admission on Emby/Jellyfin and mobile-specific acceptance remain useful additional coverage.
 
-Development used AI assistance; code, automated results and deployment evidence were reviewed separately. GPL-3.0 licensing is retained.
+GPL-3.0 licensing is retained.

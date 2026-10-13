@@ -2,7 +2,7 @@
 
 > **Fork preparation branch:** configurable OIDC enhancements are documented in
 > [docs/OIDC-ENHANCEMENTS.md](docs/OIDC-ENHANCEMENTS.md). This branch is not an
-> upstream release; no upstream pull request has been submitted.
+> upstream release. Initial PRs [#177](https://github.com/modom-ofn/auth-portal/pull/177) and [#178](https://github.com/modom-ofn/auth-portal/pull/178) are open for maintainer review.
 > [Prepared branches and PR descriptions](docs/submissions/README.md) target upstream `main`.
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/modomofn/auth-portal.svg)](https://hub.docker.com/r/modomofn/auth-portal)

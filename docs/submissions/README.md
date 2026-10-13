@@ -1,11 +1,15 @@
 # Prepared AuthPortal submissions
 
-Six focused branches and review-ready draft descriptions are prepared. No PR is open.
+Six focused branches and review-ready descriptions are prepared. Initial PRs
+[177](https://github.com/modom-ofn/auth-portal/pull/177) and [178](https://github.com/modom-ofn/auth-portal/pull/178) are open against upstream `main`; the other four await prerequisites.
+
+All code added or modified for these contributions was fully generated using AI.
+Each PR prominently asks for independent maintainer review before merging.
 The target is upstream `main`; maintainer discussion is treated as complete.
 
 | Branch | Prerequisite | CI | Draft description |
 |---|---|---|---|
-| [01-login-cancellation](https://github.com/Undeadllama/auth-portal/tree/submission/01-login-cancellation) | upstream main | [success](https://github.com/Undeadllama/auth-portal/actions/runs/38408300234) | [Preserve OIDC login continuation and add safe cancellation](01-login-cancellation.md) |
+| [01-login-cancellation](https://github.com/Undeadllama/auth-portal/tree/submission/01-login-cancellation) | upstream main | [success](https://github.com/Undeadllama/auth-portal/actions/runs/38418128673) | [Preserve OIDC login continuation and add safe cancellation](01-login-cancellation.md) |
 | [02-config-foundation](https://github.com/Undeadllama/auth-portal/tree/submission/02-config-foundation) | upstream main | [success](https://github.com/Undeadllama/auth-portal/actions/runs/38408306223) | [Add opt-in strict OIDC configuration versions and transactional hooks](02-config-foundation.md) |
 | [03-media-authorization](https://github.com/Undeadllama/auth-portal/tree/submission/03-media-authorization) | submission/02-config-foundation | [success](https://github.com/Undeadllama/auth-portal/actions/runs/38408310519) | [Configure mandatory media authorization per OIDC client](03-media-authorization.md) |
 | [04-role-claims](https://github.com/Undeadllama/auth-portal/tree/submission/04-role-claims) | submission/02-config-foundation | [success](https://github.com/Undeadllama/auth-portal/actions/runs/38408316965) | [Export allowlisted roles and permissions in OIDC claims](04-role-claims.md) |
@@ -14,14 +18,15 @@ The target is upstream `main`; maintainer discussion is treated as complete.
 
 ## Submission order and rebasing
 
-Login cancellation and the configuration foundation can be submitted independently
+Login cancellation and the configuration foundation are submitted independently
 against current `main`. After the foundation merges, rebase media authorization,
 role claims and trusted consent onto updated upstream `main`. They are independent
 of one another. Plex assignment waits for role claims as well. Do not open these
 cumulative branches against `main` before prerequisites merge unless intentionally
 requesting a stacked review.
 
-Each feature has one consolidated commit relative to its stated prerequisite. The final
+Initial preparation used one consolidated commit per prerequisite; login cancellation
+now also has a tested follow-up addressing upstream static-analysis findings. The final
 branches retain upstream main/next push triggers; validation was dispatched explicitly
 on each feature ref. CI fixture/race/PostgreSQL/Node checks accompany the changes.
 No fork-only submission trigger remains.
@@ -63,8 +68,12 @@ browser/Plex evidence does not claim separate deployments of every split branch.
 Fresh Emby/Jellyfin admission, representative LDAP, mobile-specific acceptance and
 backup restoration remain useful documented coverage gaps, not reported successes.
 
-No PRs, issues/comments, releases or registry images were created. Authorizing branch
-preparation does not authorize submitting these PRs.
+The two initial PRs were subsequently authorized and opened. No dependent PRs,
+issues/comments, releases or registry images were created. Upstream Actions needs
+maintainer approval; Sonar passed foundation and requires review of intentional VM
+test execution for login. Updated login fork CI and isolated server Go/race/vet
+passed. The initial reassembly evidence predates that follow-up; production was
+not replaced.
 
 ## Confidentiality review
 

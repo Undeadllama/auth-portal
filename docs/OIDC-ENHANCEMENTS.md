@@ -3,8 +3,8 @@
 This feature branch proposes six enhancements developed and tested in a downstream
 AuthPortal deployment. It is based on upstream `main` commit
 `62fea17bdda4085e6ee8b8588ed8f42af8e8463f` (AuthPortal v2.0.6 application code).
-It is a contribution preparation branch, not an upstream release. No pull request
-has been submitted. Existing upstream licensing remains GPL-3.0.
+It is a contribution preparation branch, not an upstream release. Initial login/configuration PRs are open; see the
+[submission status](submissions/README.md). Existing upstream licensing remains GPL-3.0.
 
 Start with [configuration and API examples](OIDC-CONFIGURATION.md),
 [design and compatibility](OIDC-DESIGN.md), and
@@ -55,6 +55,7 @@ The implementation is prepared as one integration branch to preserve the tested
 behavior. The [prepared branch map and PR drafts](submissions/README.md) provide smaller independently validated PRs
 rather than asking a maintainer to accept the entire branch at once.
 
-Development used AI assistance. Automated tests, live deployment checks and
+All code added or modified for these contributions was fully generated using AI
+and requires independent maintainer review before merging. Automated tests, live deployment checks and
 operator acceptance are recorded separately; downstream test success does not
 replace upstream maintainer review or imply upstream acceptance.

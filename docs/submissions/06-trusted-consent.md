@@ -1,5 +1,7 @@
 # Allow registration-bound trusted OIDC consent
 
+> **AI-generated code:** All code added or modified for this change was fully generated using AI. It has been tested, but must be independently reviewed by a maintainer before merging.
+
 Target: `modom-ofn/auth-portal:main`. Prepared source: `submission/06-trusted-consent`.
 
 Open only after `submission/02-config-foundation` and its prerequisites merge into upstream `main`; rebase and rerun checks first. The current branch includes those prerequisite commits.
@@ -12,4 +14,4 @@ Validation: Full suite/race/PostgreSQL, exact registration-set/change validation
 
 Compatibility/limits: Trust starts empty and does not bypass authentication, MFA or authorization. PUT resolves registrations on the server rather than accepting caller-supplied trusted redirect/scope snapshots.
 
-Development used AI assistance; code, automated results and deployment evidence were reviewed separately. GPL-3.0 licensing is retained.
+GPL-3.0 licensing is retained.

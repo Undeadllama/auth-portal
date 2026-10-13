@@ -1,5 +1,7 @@
 # Export allowlisted roles and permissions in OIDC claims
 
+> **AI-generated code:** All code added or modified for this change was fully generated using AI. It has been tested, but must be independently reviewed by a maintainer before merging.
+
 Target: `modom-ofn/auth-portal:main`. Prepared source: `submission/04-role-claims`.
 
 Open only after `submission/02-config-foundation` and its prerequisites merge into upstream `main`; rebase and rerun checks first. The current branch includes those prerequisite commits.
@@ -12,4 +14,4 @@ Validation: Full suite/race/PostgreSQL, role/permission allowlist and empty-arra
 
 Compatibility/limits: No automatic Plex rule is introduced here. Actual AuthPortal RBAC permissions remain global; claim filtering is not a portal permission sandbox. Representative live LDAP coverage remains useful.
 
-Development used AI assistance; code, automated results and deployment evidence were reviewed separately. GPL-3.0 licensing is retained.
+GPL-3.0 licensing is retained.

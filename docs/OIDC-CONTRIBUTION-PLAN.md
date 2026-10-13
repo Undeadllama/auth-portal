@@ -26,7 +26,7 @@ No upstream PR, issue/comment, release or container publication has been created
 | Live downstream OIDC | Five registered applications passed current Plex admission; omitted-scope authorization/code/refresh/userinfo denial; RSA-verified ID tokens/userinfo; explicit consent and safe cancellation | Protocol tests used short-lived maintenance sessions; generated codes/tokens cleaned up. |
 | Live compatibility | Existing accounts, registrations, roles/permissions and role/consent policies preserved; restart persistence verified; ordinary/owner role claims checked | Does not prove behavior on every AuthPortal deployment. |
 | Operator acceptance | Successful fresh browser sign-in including MFA/Cancel, admin media-selection controls and connected-application login | Reported by the downstream operator separately from automated evidence. |
-| Standalone fork | Go suite, vet, module/format checks and upstream/new Node smoke tests; fork CI status linked below once complete | Excludes the credential addon. |
+| Standalone fork | Go suite, vet, module/format checks and upstream/new Node smoke tests; fork CI results linked below | Excludes the credential addon. |
 
 Mobile-specific acceptance and backup restoration were not separately confirmed.
 Live media admission/automatic assignments were tested with Plex. Emby/Jellyfin
@@ -35,6 +35,16 @@ provider servers remains a useful cross-provider check. LDAP/system/manual claim
 filtering has automated coverage; representative LDAP deployments would strengthen
 confidence. No claim is made that upstream security scans or maintainer review have
 already passed.
+
+## Fork CI result
+
+[CI run 38404476474](https://github.com/Undeadllama/auth-portal/actions/runs/38404476474)
+passed on implementation/CI commit `b4c3e587720937ecec1520f9fd3fdb45f7f7a13e`:
+Go module/format/vet checks and full race suite with isolated PostgreSQL;
+upstream admin smoke plus both new Node regression suites; TruffleHog secret scan;
+and the unmodified upstream Dockerfile container build (without publishing).
+A documentation-only follow-up records this result; it does not change that tested
+implementation. This CI does not include every upstream release/security workflow.
 
 ## Reproduce locally
 

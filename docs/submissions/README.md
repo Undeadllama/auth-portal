@@ -65,3 +65,10 @@ backup restoration remain useful documented coverage gaps, not reported successe
 
 No PRs, issues/comments, releases or registry images were created. Authorizing branch
 preparation does not authorize submitting these PRs.
+
+## Confidentiality review
+
+The [pre-submission audit](../SECURITY-AUDIT.md) found no private environment
+references or deployed secrets introduced by these changes. Published/reachable
+history and retained preparation commits were reviewed; inherited upstream
+examples and detection-pattern findings are documented separately.

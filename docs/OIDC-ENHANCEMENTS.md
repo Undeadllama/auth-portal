@@ -9,6 +9,7 @@ has been submitted. Existing upstream licensing remains GPL-3.0.
 Start with [configuration and API examples](OIDC-CONFIGURATION.md),
 [design and compatibility](OIDC-DESIGN.md), and
 [validation and proposed submission sequence](OIDC-CONTRIBUTION-PLAN.md).
+The [confidentiality audit](SECURITY-AUDIT.md) records the pre-submission review.
 
 ## Problems and resulting behavior
 

@@ -551,6 +551,8 @@ func registerAdminRoutes(r *mux.Router) {
 	adminAPI.Handle("/config/permissions", adminProtected(permissionConfigRead, http.HandlerFunc(adminConfigPermissionCatalogHandler))).Methods("GET")
 	adminAPI.Handle("/config/{section}", adminProtected(permissionConfigWrite, http.HandlerFunc(adminConfigUpdateHandler))).Methods("PUT")
 	adminAPI.Handle("/config/history/{section}", adminProtected(permissionConfigRead, http.HandlerFunc(adminConfigHistoryHandler))).Methods("GET")
+	adminAPI.Handle("/rbac/oidc-role-assignment", adminProtected(permissionRBACRead, http.HandlerFunc(adminOIDCRoleConfigHandler))).Methods("GET")
+	adminAPI.Handle("/rbac/oidc-role-assignment", adminProtected(permissionRBACWrite, requireSameOrigin(http.HandlerFunc(adminOIDCRoleConfigHandler)))).Methods("PUT")
 	adminAPI.Handle("/oauth/clients", adminProtected(permissionOAuthRead, http.HandlerFunc(adminOAuthClientsList))).Methods("GET")
 	adminAPI.Handle("/oauth/history", adminProtected(permissionOAuthRead, http.HandlerFunc(adminOAuthHistoryHandler))).Methods("GET")
 	adminAPI.Handle("/logs/history", adminProtected(permissionAdminAccess, http.HandlerFunc(adminLogsHistoryHandler))).Methods("GET")

@@ -770,11 +770,19 @@ func oidcUserinfoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	roleClaims, roleErr := configuredOIDCRoleClaims(access.ClientID, user)
+	if roleErr != nil {
+		http.Error(w, "role verification failed", http.StatusForbidden)
+		return
+	}
 	payload := map[string]any{
 		"sub":                subjectForUser(user),
 		"preferred_username": strings.TrimSpace(user.Username),
 		"name":               strings.TrimSpace(user.Username),
 		"email_verified":     user.Email.Valid && strings.TrimSpace(user.Email.String) != "",
+	}
+	for name, value := range roleClaims {
+		payload[name] = value
 	}
 	if user.Email.Valid && strings.TrimSpace(user.Email.String) != "" {
 		payload["email"] = strings.TrimSpace(user.Email.String)
@@ -1261,6 +1269,14 @@ func mintIDToken(audience string, user User, expires time.Time, nonce string) (s
 		email := strings.TrimSpace(user.Email.String)
 		claims["email"] = email
 		claims["email_verified"] = true
+	}
+
+	roleClaims, roleErr := configuredOIDCRoleClaims(audience, user)
+	if roleErr != nil {
+		return "", roleErr
+	}
+	for name, value := range roleClaims {
+		claims[name] = value
 	}
 
 	if n := strings.TrimSpace(nonce); n != "" {
